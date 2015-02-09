@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+td.select-row-cell+td.string-cell
+{
+  color:white;
+}
+</style>
+
+<meta charset="utf-8"/>
+<title>Library for LLL SAMPLE CATALOG W/ FILTERS</title>
+<link rel="stylesheet" href="css/backgrid-0.3.5.css">
+<link rel="stylesheet" href="css/backgrid-select-all.css">
+<link rel="stylesheet" href="css/backgrid-paginator.css">
+<link rel="stylesheet" href="css/backgrid-filter.css">
+</head>
+<body>
+<h1>Library for LLL SAMPLE CATALOG W/ FILTERS</h1>
+<div id="example-2-result" class="backgrid-container"></div>
+<script src="js/jquery-1.11.0.js"></script>
+<script src="js/underscore-1.6.0.js"></script>
+<script src="js/backbone-1.1.2.js"></script>
+<script src="js/backbone-pageable.js"></script>
+<script src="js/backgrid-0.3.5.js"></script>
+<script src="js/backgrid-select-all.js"></script>
+<script src="js/backgrid-paginator.js"></script>
+<script src="js/backgrid-filter.js"></script>
+<script src="js/backgrid-filter.js"></script>
+<script src="js/image-cell.js"></script>
+<script>
+$(function() {
+
+var Territory = Backbone.Model.extend({});
+
+var columns = [{
+    name: "image", // The key of the model attribute
+    label: "Book Cover",
+    editable: false, 
+    
+    cell: "Image",
+    sortable: false,
+  }, {
+    name: "name",
+    label: "Name",
+    cell: "string",
+    editable: false,
+  }, {
+    name: "tags",
+    label: "Tags",
+    cell: "string" ,
+    editable: false,
+  },
+{
+    name:"subject",
+editable:false,
+sortable: false,
+label: "Subjects",
+cell:"string"
+
+  },
+   {
+    name: "languages",
+    label: "languages",
+    cell: "string"
+  }, {
+    name: "authors",
+    label: "Authors",
+    cell: "string"
+  },
+  {
+    name:"editors",
+editable:false,
+label: "Editors",
+cell:"string"
+
+  }, 
+ 
+ {
+    name:"blurb",
+editable:false,
+sortable: false,
+label: "Book Summmary",
+cell:"string"
+
+  },
+  {
+    name: "return",
+    editable: false,
+    sortable: false,
+    label: "Return Book",
+    cell: "uri" 
+}, 
+{
+    name: "checkout",
+    label: "checkout boook",
+    editable:false,
+    sortable:false,
+    cell: "uri" // Renders the value in an HTML anchor element
+}
+
+];
+
+var PageableTerritories = Backbone.PageableCollection.extend({
+  model: Territory,
+  url: "examples/pageable-territories.json",
+  state: {
+    pageSize: 15
+  },
+  mode: "client" // page entirely on the client side
+});
+
+var pageableTerritories = new PageableTerritories();
+
+// Set up a grid to use the pageable collection
+var pageableGrid = new Backgrid.Grid({
+  columns: [{
+    // enable the select-all extension
+    name: "",
+    cell: "select-row",
+    headerCell: "select-all"
+  }].concat(columns),
+  collection: pageableTerritories
+});
+
+// Render the grid
+var $example2 = $("#example-2-result");
+$example2.append(pageableGrid.render().el);
+
+
+// Initialize a client-side filter to filter on the client
+// mode pageable collection's cache.
+var filter = new Backgrid.Extension.ClientSideFilter({
+  collection: pageableTerritories,
+  fields: ['name']
+});
+
+// Render the filter
+$example2.before(filter.render().el);
+
+// Add some space to the filter and move it to the right
+$(filter.el).css({float: "right", margin: "20px"});
+
+// Fetch some data
+pageableTerritories.fetch({reset: true});
+
+});
+
+
+$(document).ready(function(){
+
+
+
+
+    });
+ 
+
+</script>
+</body>
+</html>
